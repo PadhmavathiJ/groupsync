@@ -2,6 +2,7 @@
 
 import { FormEvent, useEffect, useState } from "react";
 import Link from "next/link";
+import GroupSteps from "@/components/GroupSteps";
 import { useParams } from "next/navigation";
 
 type BusySlot = {
@@ -275,53 +276,55 @@ export default function MeetWhenPage() {
   }
 
   return (
-    <main className="mx-auto max-w-5xl p-6">
+    <main className="mx-auto min-h-screen max-w-6xl px-4 py-8 text-slate-950 [overflow-wrap:anywhere] sm:px-6 sm:py-12">
       <Link
         href={`/groups/${groupId}`}
-        className="text-sm text-gray-600 hover:text-black"
+        className="inline-flex min-h-11 items-center text-sm font-semibold text-slate-600 transition hover:text-indigo-600"
       >
         ← Back to group
       </Link>
 
       <div className="mt-4">
-        <h1 className="text-3xl font-bold">
+        <h1 className="text-4xl font-black tracking-tight sm:text-5xl">
           MeetWhen
         </h1>
 
-        <p className="mt-2 text-gray-600">
+        <p className="mt-2 text-slate-600">
           Add busy times and let GroupSync rank the
           best meeting times for your group.
         </p>
       </div>
 
+      <GroupSteps groupId={groupId} current="when" />
+
       {/* ADD BUSY TIME */}
 
-      <section className="mt-8 rounded-xl border p-6">
+      <section className="mt-6 rounded-3xl border border-slate-200 bg-white p-5 shadow-sm sm:p-8">
         <h2 className="text-xl font-semibold">
-          Add Busy Time
+          01 / Add busy time
         </h2>
 
-        <p className="mt-1 text-sm text-gray-600">
+        <p className="mt-1 text-sm text-slate-600">
           Tell GroupSync when you are unavailable.
         </p>
 
         <form
           onSubmit={saveBusySlot}
-          className="mt-5 grid gap-4 md:grid-cols-4"
+          className="mt-5 grid gap-4 sm:grid-cols-2 lg:grid-cols-4"
         >
           <div>
-            <label className="mb-2 block text-sm font-medium">
+            <label htmlFor="when-field-1" className="mb-2 block text-sm font-medium">
               Day
             </label>
 
-            <select
+            <select id="when-field-1"
               value={day}
               onChange={(event) => {
                 setDay(event.target.value);
                 setMeetingSlots([]);
                 setFindTimeMessage("");
               }}
-              className="w-full rounded-lg border p-3"
+              className="min-w-0 w-full rounded-xl border border-slate-200 bg-slate-50 p-3 text-slate-950 outline-none transition focus:border-indigo-400 focus:bg-white focus:ring-4 focus:ring-indigo-100"
             >
               {days.map((currentDay) => (
                 <option
@@ -335,32 +338,32 @@ export default function MeetWhenPage() {
           </div>
 
           <div>
-            <label className="mb-2 block text-sm font-medium">
+            <label htmlFor="when-field-2" className="mb-2 block text-sm font-medium">
               Busy from
             </label>
 
-            <input
+            <input id="when-field-2"
               type="time"
               value={startTime}
               onChange={(event) =>
                 setStartTime(event.target.value)
               }
-              className="w-full rounded-lg border p-3"
+              className="min-w-0 w-full rounded-xl border border-slate-200 bg-slate-50 p-3 text-slate-950 outline-none transition focus:border-indigo-400 focus:bg-white focus:ring-4 focus:ring-indigo-100"
             />
           </div>
 
           <div>
-            <label className="mb-2 block text-sm font-medium">
+            <label htmlFor="when-field-3" className="mb-2 block text-sm font-medium">
               Busy until
             </label>
 
-            <input
+            <input id="when-field-3"
               type="time"
               value={endTime}
               onChange={(event) =>
                 setEndTime(event.target.value)
               }
-              className="w-full rounded-lg border p-3"
+              className="min-w-0 w-full rounded-xl border border-slate-200 bg-slate-50 p-3 text-slate-950 outline-none transition focus:border-indigo-400 focus:bg-white focus:ring-4 focus:ring-indigo-100"
             />
           </div>
 
@@ -368,7 +371,7 @@ export default function MeetWhenPage() {
             <button
               type="submit"
               disabled={saving || loading}
-              className="w-full rounded-lg bg-black p-3 text-white disabled:opacity-50"
+              className="w-full rounded-xl bg-indigo-600 p-3 font-semibold text-white transition hover:bg-indigo-700 disabled:opacity-50 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-indigo-600"
             >
               {saving
                 ? "Saving..."
@@ -378,13 +381,13 @@ export default function MeetWhenPage() {
         </form>
 
         {message && (
-          <p className="mt-4 text-sm text-green-700">
+          <p role="status" className="mt-4 rounded-xl border border-emerald-200 bg-emerald-50 p-4 text-sm text-emerald-700">
             {message}
           </p>
         )}
 
         {error && (
-          <p className="mt-4 text-sm text-red-700">
+          <p role="alert" className="mt-4 rounded-xl border border-red-200 bg-red-50 p-4 text-sm text-red-700">
             {error}
           </p>
         )}
@@ -392,40 +395,40 @@ export default function MeetWhenPage() {
 
       {/* GROUP SCHEDULES */}
 
-      <section className="mt-8 rounded-xl border p-6">
+      <section className="mt-6 rounded-3xl border border-slate-200 bg-white p-5 shadow-sm sm:p-8">
         <h2 className="text-xl font-semibold">
-          Group Schedules
+          02 / Group schedules
         </h2>
 
-        <p className="mt-1 text-sm text-gray-600">
+        <p className="mt-1 text-sm text-slate-600">
           Busy times entered by group members.
         </p>
 
         {loading ? (
-          <p className="mt-4">Loading schedules...</p>
+          <p role="status" className="mt-5 rounded-2xl bg-slate-50 p-6 text-sm text-slate-500 motion-safe:animate-pulse">Loading your group schedules...</p>
         ) : schedules.length === 0 ? (
-          <p className="mt-4 text-gray-600">
-            No busy times have been added yet.
+          <p className="mt-4 text-slate-600">
+            {error ? "Schedules are unavailable. Check the message above and refresh to try again." : "No busy times yet. Add your first busy time above, then ask your group to add theirs."}
           </p>
         ) : (
           <div className="mt-5 grid gap-4">
             {schedules.map((schedule) => (
               <div
                 key={schedule._id}
-                className="rounded-lg border p-4"
+                className="min-w-0 rounded-2xl border border-slate-200 bg-slate-50/60 p-4"
               >
-                <div className="flex justify-between gap-4">
+                <div className="flex flex-wrap justify-between gap-4">
                   <div>
-                    <p className="font-semibold">
+                    <p className="font-semibold break-words">
                       {schedule.userId.name}
                     </p>
 
-                    <p className="text-sm text-gray-600">
+                    <p className="text-sm text-slate-600">
                       {schedule.dayOfWeek}
                     </p>
                   </div>
 
-                  <span className="text-sm text-gray-500">
+                  <span className="text-sm text-slate-500">
                     {schedule.busySlots.length} busy{" "}
                     {schedule.busySlots.length === 1
                       ? "slot"
@@ -438,7 +441,7 @@ export default function MeetWhenPage() {
                     (slot, index) => (
                       <span
                         key={`${slot.startTime}-${slot.endTime}-${index}`}
-                        className="rounded-lg bg-gray-100 px-3 py-2 text-sm"
+                        className="rounded-lg bg-slate-100 px-3 py-2 text-sm"
                       >
                         {slot.startTime} –{" "}
                         {slot.endTime}
@@ -454,33 +457,33 @@ export default function MeetWhenPage() {
 
       {/* FIND BEST MEETING TIME */}
 
-      <section className="mt-8 rounded-xl border p-6">
+      <section className="mt-6 rounded-3xl border border-slate-200 bg-white p-5 shadow-sm sm:p-8">
         <div>
           <h2 className="text-xl font-semibold">
-            Find Best Meeting Time
+            03 / Find the best meeting time
           </h2>
 
-          <p className="mt-1 text-sm text-gray-600">
+          <p className="mt-1 text-sm text-slate-600">
             GroupSync compares everyone&apos;s busy
             schedules and ranks the best available
             meeting slots.
           </p>
         </div>
 
-        <div className="mt-5 grid gap-4 md:grid-cols-4">
+        <div className="mt-5 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
           <div>
-            <label className="mb-2 block text-sm font-medium">
+            <label htmlFor="when-field-4" className="mb-2 block text-sm font-medium">
               Day
             </label>
 
-            <select
+            <select id="when-field-4"
               value={day}
               onChange={(event) => {
                 setDay(event.target.value);
                 setMeetingSlots([]);
                 setFindTimeMessage("");
               }}
-              className="w-full rounded-lg border p-3"
+              className="min-w-0 w-full rounded-xl border border-slate-200 bg-slate-50 p-3 text-slate-950 outline-none transition focus:border-indigo-400 focus:bg-white focus:ring-4 focus:ring-indigo-100"
             >
               {days.map((currentDay) => (
                 <option
@@ -494,48 +497,48 @@ export default function MeetWhenPage() {
           </div>
 
           <div>
-            <label className="mb-2 block text-sm font-medium">
+            <label htmlFor="when-field-5" className="mb-2 block text-sm font-medium">
               Search from
             </label>
 
-            <input
+            <input id="when-field-5"
               type="time"
               value={searchStart}
               onChange={(event) =>
                 setSearchStart(event.target.value)
               }
-              className="w-full rounded-lg border p-3"
+              className="min-w-0 w-full rounded-xl border border-slate-200 bg-slate-50 p-3 text-slate-950 outline-none transition focus:border-indigo-400 focus:bg-white focus:ring-4 focus:ring-indigo-100"
             />
           </div>
 
           <div>
-            <label className="mb-2 block text-sm font-medium">
+            <label htmlFor="when-field-6" className="mb-2 block text-sm font-medium">
               Search until
             </label>
 
-            <input
+            <input id="when-field-6"
               type="time"
               value={searchEnd}
               onChange={(event) =>
                 setSearchEnd(event.target.value)
               }
-              className="w-full rounded-lg border p-3"
+              className="min-w-0 w-full rounded-xl border border-slate-200 bg-slate-50 p-3 text-slate-950 outline-none transition focus:border-indigo-400 focus:bg-white focus:ring-4 focus:ring-indigo-100"
             />
           </div>
 
           <div>
-            <label className="mb-2 block text-sm font-medium">
+            <label htmlFor="when-field-7" className="mb-2 block text-sm font-medium">
               Duration
             </label>
 
-            <select
+            <select id="when-field-7"
               value={durationMinutes}
               onChange={(event) =>
                 setDurationMinutes(
                   Number(event.target.value)
                 )
               }
-              className="w-full rounded-lg border p-3"
+              className="min-w-0 w-full rounded-xl border border-slate-200 bg-slate-50 p-3 text-slate-950 outline-none transition focus:border-indigo-400 focus:bg-white focus:ring-4 focus:ring-indigo-100"
             >
               <option value={30}>30 minutes</option>
               <option value={60}>60 minutes</option>
@@ -549,7 +552,7 @@ export default function MeetWhenPage() {
           type="button"
           onClick={handleFindTime}
           disabled={findingTime}
-          className="mt-5 rounded-lg bg-black px-6 py-3 font-medium text-white disabled:opacity-50"
+          className="mt-5 w-full rounded-xl transition hover:bg-indigo-700 sm:w-auto bg-indigo-600 px-6 py-3 font-medium text-white disabled:opacity-50 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-indigo-600"
         >
           {findingTime
             ? "Finding..."
@@ -557,19 +560,28 @@ export default function MeetWhenPage() {
         </button>
 
         {findTimeMessage && (
-          <p className="mt-4 text-sm text-red-700">
+          <p role="alert" className="mt-4 rounded-xl border border-red-200 bg-red-50 p-4 text-sm text-red-700">
             {findTimeMessage}
           </p>
         )}
 
-        {meetingSlots.length > 0 && (
-          <div className="mt-8">
-            <div className="flex items-center justify-between">
-              <h3 className="text-lg font-semibold">
-                Recommended Times
-              </h3>
+      </section>
 
-              <span className="text-sm text-gray-500">
+      <section aria-label="Ranked meeting times" aria-live="polite" aria-busy={findingTime} className="mt-6 rounded-3xl border border-slate-200 bg-white p-5 shadow-sm sm:p-8">
+        {meetingSlots.length === 0 && (
+          <div className="rounded-2xl border border-dashed border-slate-300 bg-slate-50 p-6 text-center">
+            <h2 className="text-xl font-bold">04 / Ranked recommendations</h2>
+            <p className="mt-2 text-sm leading-6 text-slate-600">{findingTime ? "Comparing schedules to find your best matches..." : findTimeMessage ? "Try another day, a wider search window, or a shorter duration." : "Choose a day and search window above, then select Find Best Time. Your top matches will appear here."}</p>
+          </div>
+        )}
+        {meetingSlots.length > 0 && (
+          <div>
+            <div className="flex flex-wrap items-center justify-between gap-3">
+              <h2 className="text-xl font-semibold">
+                04 / Ranked recommendations
+              </h2>
+
+              <span className="text-sm text-slate-500">
                 Ranked by attendance
               </span>
             </div>
@@ -584,18 +596,18 @@ export default function MeetWhenPage() {
                   return (
                     <div
                       key={`${slot.startTime}-${slot.endTime}`}
-                      className="rounded-xl border p-5"
+                      className={`min-w-0 rounded-2xl border p-5 sm:p-6 ${index === 0 ? "border-indigo-300 bg-indigo-50/60 shadow-md shadow-indigo-100/50" : "border-slate-200 bg-white"}`}
                     >
                       <div className="flex flex-wrap items-center justify-between gap-4">
                         <div>
-                          <div className="flex items-center gap-3">
+                          <div className="flex flex-wrap items-center gap-3">
                             <p className="text-lg font-semibold">
                               {slot.startTime} –{" "}
                               {slot.endTime}
                             </p>
 
                             {index === 0 && (
-                              <span className="rounded-full bg-black px-3 py-1 text-xs font-medium text-white">
+                              <span className="rounded-full bg-indigo-600 px-3 py-1 text-xs font-medium text-white">
                                 Best Match
                               </span>
                             )}
@@ -607,7 +619,7 @@ export default function MeetWhenPage() {
                             )}
                           </div>
 
-                          <p className="mt-2 text-sm text-gray-600">
+                          <p className="mt-2 text-sm text-slate-600">
                             {
                               slot.availableMembers
                                 .length
@@ -629,20 +641,22 @@ export default function MeetWhenPage() {
                             %
                           </p>
 
-                          <p className="text-xs text-gray-500">
-                            attendance
+                          <p className="text-xs text-slate-500">
+                            of members available
                           </p>
                         </div>
                       </div>
 
+                      <p className="mt-4 text-sm text-slate-600">{slot.availableMembers.length} of {slot.availableMembers.length + slot.unavailableMembers.length} members can attend this time.</p>
+
                       {slot.availableMembers.length >
                         0 && (
-                        <div className="mt-4">
-                          <p className="text-sm font-medium">
+                        <div className="mt-4 rounded-xl border border-emerald-200 bg-emerald-50 p-3 text-emerald-800">
+                          <p className="text-sm font-semibold">
                             Available
                           </p>
 
-                          <p className="mt-1 text-sm text-gray-600">
+                          <p className="mt-1 text-sm break-words">
                             {slot.availableMembers.join(
                               ", "
                             )}
@@ -652,12 +666,12 @@ export default function MeetWhenPage() {
 
                       {slot.unavailableMembers.length >
                         0 && (
-                        <div className="mt-3">
-                          <p className="text-sm font-medium">
+                        <div className="mt-3 rounded-xl border border-rose-200 bg-rose-50 p-3 text-rose-800">
+                          <p className="text-sm font-semibold">
                             Unavailable
                           </p>
 
-                          <p className="mt-1 text-sm text-gray-600">
+                          <p className="mt-1 text-sm break-words">
                             {slot.unavailableMembers.join(
                               ", "
                             )}
@@ -671,6 +685,10 @@ export default function MeetWhenPage() {
           </div>
         )}
       </section>
+      <div className="mt-8 flex flex-col gap-3 rounded-2xl bg-slate-950 p-6 text-white sm:flex-row sm:items-center sm:justify-between">
+        <p className="text-sm text-slate-300">Found a time that works? Choose where to meet next.</p>
+        <Link href={`/groups/${groupId}/where`} className="inline-flex min-h-11 items-center justify-center rounded-xl bg-white px-5 py-3 text-sm font-bold text-indigo-700 transition hover:bg-indigo-50">Next: choose a place &rarr;</Link>
+      </div>
     </main>
   );
 }

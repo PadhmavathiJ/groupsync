@@ -1,5 +1,8 @@
 "use client";
 
+import Link from "next/link";
+import GroupSteps from "@/components/GroupSteps";
+
 import {
   use,
   useEffect,
@@ -354,7 +357,11 @@ export default function ExpensesPage({
 
   return (
     <main className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-indigo-50 px-4 py-8 sm:px-6">
-      <div className="mx-auto max-w-7xl space-y-8">
+      <div className="mx-auto max-w-7xl space-y-8 [overflow-wrap:anywhere]">
+        <div>
+          <Link href={`/groups/${id}`} className="inline-flex min-h-11 items-center text-sm font-semibold text-slate-600 transition hover:text-indigo-600">&larr; Back to group</Link>
+          <GroupSteps groupId={id} current="expenses" />
+        </div>
         <section className="rounded-3xl border border-slate-200 bg-white/90 p-6 shadow-sm backdrop-blur sm:p-8">
           <p className="mb-2 text-sm font-semibold uppercase tracking-[0.2em] text-indigo-600">
             Group expenses
@@ -391,7 +398,7 @@ export default function ExpensesPage({
           </section>
         )}
 
-        <div className="grid gap-8 lg:grid-cols-[1.05fr_0.95fr]">
+        <div className="grid gap-8 lg:grid-cols-[minmax(0,1.05fr)_minmax(0,0.95fr)]">
           <section className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm">
             <div className="mb-6">
               <h2 className="text-xl font-bold text-slate-900">
