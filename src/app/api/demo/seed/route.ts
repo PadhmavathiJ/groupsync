@@ -19,6 +19,13 @@ const demoUsers = [
 ];
 
 export async function POST(request: Request) {
+  if (process.env.NODE_ENV === "production") {
+    return Response.json(
+      { message: "Demo seeding is disabled in production." },
+      { status: 403 }
+    );
+  }
+
   try {
     const session = await auth();
 
